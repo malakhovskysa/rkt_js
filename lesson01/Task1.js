@@ -6,11 +6,11 @@
  * @author Сергей Малаховский
  */
 
-var inputs = ['1001011', '110', '01', '13'];
+const inputs = ['1001011', '110', '01', '13'];
 
-var getDecimal = function (binaryNum) {
-    var result = 0;
-    for (var i in binaryNum) {
+let getDecimal = function (binaryNum) {
+    let result = 0;
+    for (let i in binaryNum) {
         result = result << 1;
         switch (binaryNum[i]) {
             case '1' :
@@ -26,8 +26,8 @@ var getDecimal = function (binaryNum) {
     return result;
 };
 
-var printResult = function (arr) {
-    for (var i in arr) {
+let printResult = function (arr) {
+    for (let i in arr) {
         console.log(arr[i] + ' = ' + getDecimal(arr[i]));
     }
 };
