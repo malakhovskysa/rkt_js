@@ -10,24 +10,15 @@
  * @Task 2
  * Необходимо создать функцию, которое будет принимать на вход число любой длинны и представлять его в виде списка.
  *
+ * @Task 3
+ *
+ * Сложение двух чисел, заданных виде списка.
+ *
  * @author Сергей Малаховский
  */
 
 
 /* Task 1 */
-/**
- * Описание ноды
- * */
-function Node(value) {
-    this.value = value;
-    this.next = null;
-
-    this.print = function () {
-        console.log(this.value);
-    };
-};
-
-
 /**
  * Односвязанный список
  * */
@@ -44,7 +35,7 @@ function SimpleList() {
      */
     this.add = function (index, value) {
         /*
-         Если передалитолкьо один аргумент,
+         Если передали только один аргумент,
          то считаем что передали значение ноды и добавляем ее в начало списка
          */
         if (arguments.length == 1) {
@@ -79,6 +70,16 @@ function SimpleList() {
         this.length++;
         return result;
     };
+
+    /**
+     * Добавление элемента в конец списка
+     *
+     * @param value значение ноды.
+     */
+
+    this.push = (value) => {
+        this.add(this.length, value);
+    }
 
     /**
      * Добавление первого элемента в пустой список
@@ -152,6 +153,19 @@ function SimpleList() {
 };
 
 
+/**
+ * Описание ноды
+ * */
+function Node(value) {
+    this.value = value;
+    this.next = null;
+
+    this.print = function () {
+        console.log(this.value);
+    };
+};
+
+
 let lst = new SimpleList();
 console.log("Добавляем элементы в список:");
 lst.add(1);
@@ -197,3 +211,42 @@ function numToList(n) {
 console.log('Преоразование числа в список');
 let numList = numToList(num);
 numList.print();
+
+/**
+ * Task 3
+ */
+
+function addTwoList(num1, num2) {
+    // Проверка и подготовка данных
+    if (num1 === null || num2 === null) {
+        throw new Error("Пустой список")
+    }
+    let resultList = new SimpleList();
+    resultList.push(0);
+
+    //реализация сложения списков
+    this.add = (node1, node2) => {
+        let n1 = (node1 !== null) ? +node1.value : 0;
+        let n2 = (node2 !== null) ? +node2.value : 0;
+        let sum = n1 + n2;
+        resultList.getTail().value = +resultList.getTail().value + (sum % 10);
+        if (( this.hasNext(node1) || this.hasNext(node2))) {
+            resultList.push((sum > 9) ? 1 : 0);
+            this.add((this.hasNext(node1)) ? node1.next : null, (this.hasNext(node2)) ? node2.next : null);
+        } else {
+            if (sum > 9) resultList.push(1);
+        }
+        return resultList;
+    };
+
+    this.hasNext = (node) => {
+        return (node !== null && node.next !== null);
+    };
+
+    return this.add(num1, num2);
+}
+
+let firstNum = 243;
+let secondNum = 564;
+
+addTwoList(numToList(firstNum).head, numToList(secondNum).head).print();
