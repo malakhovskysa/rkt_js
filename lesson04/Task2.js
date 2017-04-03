@@ -62,17 +62,19 @@ class Graph {
         return node;
     }
 
-
+    /**
+     * Поиск пути на кратчашего расстояния на основе алгоритма Дейкстры
+     * @param startNodeId id стартовой ноды.
+     * @param endNodeId id финишной ноды.
+     * @return {*} кратчайшее расстояние
+     */
     path(startNodeId, endNodeId) {
         let startNode = this.nodes[startNodeId];
-        let endNode = this.nodes[endNodeId];
 
         const INF = 1000000;
-        const COUNT_VORTEX = this.nodes.length;
 
         // Инициализация параметров
         let viewedVortex = [];
-        let path = [startNodeId];
 
         let lengthToVortex = [];
         for (let nodeId in this.nodes) {
@@ -99,18 +101,16 @@ class Graph {
 
             selectedNode = this.getNextVortex(viewedVortex, lengthToVortex);
             if (~selectedNode) {
-                // console.log(selectedNode);
                 selectedNode = this.nodes[selectedNode];
             } else {
                 break
             }
         }
-        // console.log(lengthToVortex[endNodeId]);
-        // this.printPath(lengthToVortex, endNodeId);
         return lengthToVortex[endNodeId];
 
     }
 
+    //Выбор непосещенной ноды с наименьшим значением расстояния
     getNextVortex(viewedVortex, lengthToVortex) {
         let resVortexId = -1;
         let minLength = 1000001;
@@ -125,37 +125,52 @@ class Graph {
         return resVortexId;
     }
 
-    searchPath(startNodeId, endNodeId) {
+    /**
+     * Построение пути c кратчайшим расстоянием мехжу нодами с помощью алгоритма Дейкстры.
+     *
+     * @param startNodeId id стартовой ноды.
+     * @param endNodeId id финишной ноды.
+     */
+    buildPath(startNodeId, endNodeId) {
         const SPLITTER = " --> ";
-        console.log("Строим путь от вершины " + startNodeId + " до вершины " + endNodeId);
+        let selNode = this.nodes[startNodeId];
         let res = "" + startNodeId;
 
-        let length = this.path(startNodeId, endNodeId);
-
-        let selNode = this.nodes[startNodeId];
-        console.log(selNode.links);
+        // Построение пути
         while (1) {
             let viewedVortexes = [];
             for (let node of selNode.links) {
                 let len = this.path(node[0].id, endNodeId);
+                //Добавляем ноды в массив, индекс - расстояние.
+                // Т.о. получаем массиве первым элементом - ноду с кратчайшем расстоянием.
                 viewedVortexes[len + node[1]] = node[0].id;
             }
-            this.printArrInLine(viewedVortexes);
             // let nextNodeId = viewedVortexes.shift(); не работает. Возвращает undefinite
-            this.printArrInLine(viewedVortexes);
+            //Получаем первый элемент массива - следующую ноду в пути.
             let nextNodeId = this.getFirstArrEl(viewedVortexes);
-            console.log("123" + nextNodeId);
             res = res + SPLITTER + nextNodeId;
-            if (nextNodeId != endNodeId) {
-                selNode = this.nodes[nextNodeId];
-            } else {
+
+            if (nextNodeId == endNodeId) {
                 break;
             }
+            selNode = this.nodes[nextNodeId];
         }
-
-        console.log("Получившийся путь: " + res);
-        console.log("Длина пути: " + length);
+        return res;
     }
+
+    /**
+     * Построение пути и вычисление кратчайшего расстояния мехжу нодами с помощью алгоритма Дейкстры.
+     *
+     * @param startNodeId id стартовой ноды.
+     * @param endNodeId id финишной ноды.
+     */
+    searchPath(startNodeId, endNodeId) {
+        console.log("Строим путь от вершины " + startNodeId + " до вершины " + endNodeId);
+
+        console.log("Получившийся путь: " + this.buildPath(startNodeId, endNodeId));
+        console.log("Длина пути: " + this.path(startNodeId, endNodeId));
+    }
+
 
     getFirstArrEl(arr) {
         for (let i in arr) {
@@ -182,6 +197,7 @@ class Graph {
 
 
 let graph = new Graph(graphArray);
+console.log("Получившийся граф:");
 graph.printAllNodes();
 graph.searchPath(5, 3);
 graph.searchPath(4, 3);
